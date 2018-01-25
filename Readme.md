@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Мария Чернышева](https://up.htmlacademy.ru/javascript/12/user/394609).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Батогов](https://up.htmlacademy.ru/javascript/12/user/9829).
 
 ---
 
