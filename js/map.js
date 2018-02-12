@@ -11,43 +11,42 @@ var mapFilters = document.querySelector('.map__filters-container');
 var notices = [];
 var NOTICE_COUNTER = 8;
 
+// titles
+var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+
+// types
+var types = ['flat', 'house', 'bungalo'];
+
+// checkin - checkout
+var times = ['12:00', '13:00', '14:00'];
+
+// features
+var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+
+// photos
+var pictures = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+
+var getRandomFeatures = function () {
+  var featuresCounter = Math.ceil(Math.random() * features.length);
+  var randomFeaturesArray = features.slice(0, featuresCounter);
+  return randomFeaturesArray;
+};
+
+// случайный элемент массива
 var getRandomElement = function (array) {
   var value = Math.floor(Math.random() * array.length);
   return array[value];
 };
 
-var arrayIndex = [1, 2, 3, 4, 5, 6, 7, 8];
-
-// title
-var arrayTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-
-// type
-var typeOfApartments = ['flat', 'house', 'bungalo'];
-
-// checkin - checkout
-var time = ['12:00', '13:00', '14:00'];
-
-// photos
-var picturesOfApartments = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-
-// features
-var listOfFeatures = ['feature--wifi', 'feature--dishwasher', 'feature--parking', 'feature--washer', 'feature--elevator', 'feature--conditioner'];
-
-var getRandomFeatures = function () {
-  var featuresCounter = Math.ceil(Math.random() * listOfFeatures.length);
-  var randomFeaturesArray = listOfFeatures.slice(0, featuresCounter);
-  return randomFeaturesArray;
+// случайное число
+var generateRandomNumber = function (min, max) {
+  var number = Math.floor(Math.random() * (max - min + 1)) + min;
+  return number;
 };
 
 // перемешать
 var shuffleArray = function () {
   return Math.random() - 0.5;
-};
-
-// location
-var generateRandomNumber = function (min, max) {
-  var number = Math.floor(Math.random() * (max - min + 1)) + min;
-  return number;
 };
 
 // объект
@@ -57,20 +56,20 @@ for (var i = 0; i < NOTICE_COUNTER; i++) {
 
   var randomNotice = {
     author: {
-      avatar: 'img/avatars/user0' + arrayIndex[i] + '.png'
+      avatar: 'img/avatars/user0' + (i + 1) + '.png'
     },
     offer: {
-      title: arrayTitle[i],
+      title: titles[i],
       address: coordX + ' , ' + coordY,
       price: generateRandomNumber(1000, 1000000),
-      type: getRandomElement(typeOfApartments),
+      type: getRandomElement(types),
       rooms: generateRandomNumber(1, 5),
       guests: generateRandomNumber(1, 10),
-      checkin: getRandomElement(time),
-      checkout: getRandomElement(time),
+      checkin: getRandomElement(times),
+      checkout: getRandomElement(times),
       features: getRandomFeatures(),
       description: '',
-      pictures: picturesOfApartments.sort(shuffleArray)
+      pictures: pictures.sort(shuffleArray)
     },
     location: {
       x: coordX,
@@ -81,7 +80,6 @@ for (var i = 0; i < NOTICE_COUNTER; i++) {
 }
 
 var similarMapPinTemplate = document.querySelector('template').content;
-
 
 // отрисовка pin
 var renderMapPin = function (notice) {
@@ -124,21 +122,22 @@ var renderNotice = function (notice) {
 
   mapCard.querySelector('.checkin-and-checkout').textContent = 'Заезд после ' + notice.offer.checkin + ', выезд до ' + notice.offer.checkout;
 
-  for (var e = 0; e < notice.offer.features.length; e++) {
+  for (var k = 0; k < notice.offer.features.length; k++) {
     var newFeature = '<li class="feature"></li>';
     var popupFeatures = mapCard.querySelector('.popup__features');
     popupFeatures.insertAdjacentHTML('afterbegin', newFeature);
-    popupFeatures.querySelector('li').classList.add(notice.offer.features[e]);
+    var featureElement = 'feature--' + notice.offer.features[k];
+    popupFeatures.querySelector('li').classList.add(featureElement);
   }
 
   mapCard.querySelector('.description').textContent = notice.offer.description;
 
-  for (var x = 0; x < notice.offer.pictures.length; x++) {
+  for (var l = 0; l < notice.offer.pictures.length; l++) {
     var newPicture = '<li><img src=""></li>';
     var popupPictures = mapCard.querySelector('.popup__pictures');
     popupPictures.insertAdjacentHTML('afterbegin', newPicture);
     var picture = popupPictures.querySelector('img');
-    picture.src = notice.offer.pictures[x];
+    picture.src = notice.offer.pictures[l];
     picture.width = 100;
     picture.height = 100;
   }
