@@ -1,5 +1,13 @@
 'use strict';
 
+var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var TYPES = ['flat', 'house', 'bungalo'];
+var TIMES = ['12:00', '13:00', '14:00'];
+var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var PICTURES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var NOTICE_COUNTER = 8;
+var notices = [];
+
 // убрали класс
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
@@ -7,28 +15,9 @@ map.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
 var mapFilters = document.querySelector('.map__filters-container');
 
-// основной массив
-var notices = [];
-var NOTICE_COUNTER = 8;
-
-// titles
-var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-
-// types
-var types = ['flat', 'house', 'bungalo'];
-
-// checkin - checkout
-var times = ['12:00', '13:00', '14:00'];
-
-// features
-var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
-// photos
-var pictures = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-
 var getRandomFeatures = function () {
-  var featuresCounter = Math.ceil(Math.random() * features.length);
-  var randomFeaturesArray = features.slice(0, featuresCounter);
+  var featuresCounter = Math.ceil(Math.random() * FEATURES.length);
+  var randomFeaturesArray = FEATURES.slice(0, featuresCounter);
   return randomFeaturesArray;
 };
 
@@ -59,17 +48,17 @@ for (var i = 0; i < NOTICE_COUNTER; i++) {
       avatar: 'img/avatars/user0' + (i + 1) + '.png'
     },
     offer: {
-      title: titles[i],
+      title: TITLES[i],
       address: coordX + ' , ' + coordY,
       price: generateRandomNumber(1000, 1000000),
-      type: getRandomElement(types),
+      type: getRandomElement(TYPES),
       rooms: generateRandomNumber(1, 5),
       guests: generateRandomNumber(1, 10),
-      checkin: getRandomElement(times),
-      checkout: getRandomElement(times),
+      checkin: getRandomElement(TIMES),
+      checkout: getRandomElement(TIMES),
       features: getRandomFeatures(),
       description: '',
-      pictures: pictures.sort(shuffleArray)
+      pictures: PICTURES.slice().sort(shuffleArray)
     },
     location: {
       x: coordX,
