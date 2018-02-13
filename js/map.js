@@ -8,7 +8,6 @@ var PICTURES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0
 var NOTICE_COUNTER = 8;
 var notices = [];
 
-// убрали класс
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
