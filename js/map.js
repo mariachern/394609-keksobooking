@@ -18,6 +18,8 @@ var PIN_HEIGHT = 70;
 
 var PIN_WIDTH = 50;
 
+var ESC_KEYCODE = 27;
+
 var NOTICE_COUNTER = 8;
 
 var notices = [];
@@ -31,6 +33,7 @@ var mainMapPin = mapPins.querySelector('.map__pin--main');
 var mapFilters = document.querySelector('.map__filters-container');
 
 var noticeForm = document.querySelector('.notice__form');
+
 var noticeFormFieldset = noticeForm.querySelectorAll('fieldset');
 
 // все поля формы неактивные
@@ -198,6 +201,28 @@ var mapPinHandler = function (evt) {
     if (target.className === 'map__pin') {
       renderNotice(notices[target.getAttribute('id')]);
       map.insertBefore(mapCard, mapFilters);
+
+      var popupNotice = document.querySelector('.popup');
+      var closePopupButton = document.querySelector('.popup__close');
+
+      if (popupNotice.classList.contains('hidden')) {
+        popupNotice.classList.remove('hidden');
+      }
+
+      var closePopup = function () {
+        popupNotice.classList.add('hidden');
+        document.removeEventListener('keydown', onPopupEscPress);
+      };
+
+      var onPopupEscPress = function (e) {
+        if (e.keyCode === ESC_KEYCODE) {
+          closePopup();
+        }
+      };
+
+      document.addEventListener('keydown', onPopupEscPress);
+      closePopupButton.addEventListener('click', closePopup);
+
       return;
     }
     target = target.parentNode;
