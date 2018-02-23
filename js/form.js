@@ -37,15 +37,13 @@
   }
 
   // заполнение полей времени
-  var setTime = function (evt) {
+  window.noticeForm.querySelector('#time').addEventListener('change', function (evt) {
     var target = evt.target;
     if (target === timeIn) {
       timeOut.selectedIndex = timeIn.selectedIndex;
     }
     timeIn.selectedIndex = timeOut.selectedIndex;
-  };
-
-  window.noticeForm.querySelector('#time').addEventListener('click', setTime);
+  });
 
   var changeMinPrice = function () {
     var price = MIN_PRICE[typeOfApartament.value];
