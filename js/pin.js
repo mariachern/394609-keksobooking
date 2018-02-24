@@ -4,11 +4,14 @@
   var PIN_HEIGHT = 70;
   var PIN_WIDTH = 50;
 
-  var counter = 0;
-
   window.similarMapPinTemplate = document.querySelector('template').content;
 
+  var counter = 0;
+
   window.renderMapPin = function (notice) {
+    if (counter >= window.notices.length) {
+      counter = 0;
+    }
     var mapPin = window.similarMapPinTemplate.querySelector('.map__pin').cloneNode(true);
     var mapPinImg = mapPin.querySelector('img');
     mapPinImg.src = notice.author.avatar;

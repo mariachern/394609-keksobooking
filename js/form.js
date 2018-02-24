@@ -7,7 +7,6 @@
     house: 5000,
     palace: 10000
   };
-
   var GUESTS = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -31,10 +30,21 @@
 
   var capacityOptions = capacityOfApartament.querySelectorAll('option');
 
+  var resetButton = window.noticeForm.querySelector('.form__reset');
+
   // все поля формы неактивные
   for (var i = 0; i < window.noticeFormFieldset.length; i++) {
     window.noticeFormFieldset[i].disabled = true;
   }
+
+  // активация формы
+  window.showForm = function () {
+    window.noticeForm.classList.remove('notice__form--disabled');
+    for (var j = 0; j < window.noticeFormFieldset.length; j++) {
+      window.noticeFormFieldset[j].disabled = false;
+      window.setAddress();
+    }
+  };
 
   // заполнение полей времени
   window.noticeForm.querySelector('#time').addEventListener('change', function (evt) {
@@ -45,12 +55,13 @@
     timeIn.selectedIndex = timeOut.selectedIndex;
   });
 
+  // изменение минимального значения цены
   var changeMinPrice = function () {
     var price = MIN_PRICE[typeOfApartament.value];
     window.noticeForm.querySelector('#price').setAttribute('min', price);
   };
 
-  typeOfApartament.addEventListener('click', changeMinPrice);
+  typeOfApartament.addEventListener('change', changeMinPrice);
 
   // валидация гостей
   var changeGuests = function () {
@@ -67,4 +78,29 @@
   };
 
   roomNumber.addEventListener('change', changeGuests);
+
+  // деакцивация формы
+  var deactivateForm = function () {
+    window.noticeForm.classList.add('notice__form--disabled');
+    for (var y = 0; y < window.noticeFormFieldset.length; y++) {
+      window.noticeFormFieldset[y].disabled = true;
+    }
+    window.noticeForm.reset();
+  };
+
+  resetButton.addEventListener('click', function () {
+    deactivateForm();
+    window.deactivateMap();
+  });
+
+  var onLoad = function () {
+    deactivateForm();
+    window.deactivateMap();
+  };
+
+  // отправка формы
+  window.noticeForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(window.noticeForm), onLoad, window.onError);
+    evt.preventDefault();
+  });
 })();

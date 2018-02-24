@@ -2,7 +2,6 @@
 
 (function () {
   var MAIN_PIN_HEIGHT = 62;
-
   var MAIN_PIN_TAIL = 20;
 
   var map = document.querySelector('.map');
@@ -17,10 +16,12 @@
 
   var coordsRange = {
     y: {
+      start: 375,
       min: 120,
       max: 650
     },
     x: {
+      start: 600,
       min: 0,
       max: mapPins.offsetWidth
     }
@@ -32,10 +33,18 @@
   var noticeAddress = document.getElementsByName('address')[0];
   noticeAddress.value = mainPinX + ' , ' + mainPinY;
 
-  var setAddress = function () {
+  window.setAddress = function () {
     noticeAddress.setAttribute('readonly', 'readonly');
     mainPinX = mainMapPin.offsetLeft;
     mainPinY = mainMapPin.offsetTop + MAIN_PIN_HEIGHT / 2 + MAIN_PIN_TAIL;
+    noticeAddress.value = mainPinX + ' , ' + mainPinY;
+  };
+
+  var resetAddress = function () {
+    mainPinX = coordsRange.x.start;
+    mainPinY = coordsRange.y.start;
+    mainMapPin.style.left = mainPinX + 'px';
+    mainMapPin.style.top = mainPinY + 'px';
     noticeAddress.value = mainPinX + ' , ' + mainPinY;
   };
 
@@ -80,7 +89,7 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      setAddress();
+      window.setAddress();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -92,33 +101,29 @@
 
   // активация карты и формы в первый раз
   var onMainPinEnterPress = function (evt) {
-    window.keyboard.isEnterEvent(evt, showMap);
+    window.keyboard.isEnterEvent(evt, activateMap);
   };
 
-  var showForm = function () {
-    window.noticeForm.classList.remove('notice__form--disabled');
-    for (var i = 0; i < window.noticeFormFieldset.length; i++) {
-      window.noticeFormFieldset[i].disabled = false;
-      setAddress();
-    }
-  };
-
-  var showMap = function () {
+  var activateMap = function () {
     map.classList.remove('map--faded');
 
+    // отображение загруженных пинов на карте
     var fragment = document.createDocumentFragment();
-    for (var j = 0; j < window.NOTICE_COUNTER; j++) {
+    for (var j = 0; j < window.notices.length; j++) {
       fragment.appendChild(window.renderMapPin(window.notices[j]));
     }
+    var div = document.createElement('div');
+    div.className = 'rendering-pins';
+    div.appendChild(fragment);
+    mapPins.appendChild(div);
 
-    mapPins.appendChild(fragment);
     mainMapPin.removeEventListener('mouseup', mainPinClickHandler);
     mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
   };
 
   var mainPinClickHandler = function () {
-    showMap();
-    showForm();
+    activateMap();
+    window.showForm();
   };
 
   mainMapPin.addEventListener('mouseup', mainPinClickHandler);
@@ -132,11 +137,11 @@
         window.renderNotice(window.notices[target.getAttribute('id')]);
         map.insertBefore(window.mapCard, mapFilters);
 
-        var popupNotice = document.querySelector('.popup');
+        window.popupNotice = document.querySelector('.popup');
         var closePopupButton = document.querySelector('.popup__close');
 
-        if (popupNotice.classList.contains('hidden')) {
-          popupNotice.classList.remove('hidden');
+        if (window.popupNotice.classList.contains('hidden')) {
+          window.popupNotice.classList.remove('hidden');
         }
 
         var onPopupEscPress = function (e) {
@@ -144,7 +149,7 @@
         };
 
         var closePopup = function () {
-          popupNotice.classList.add('hidden');
+          window.popupNotice.classList.add('hidden');
           document.removeEventListener('keydown', onPopupEscPress);
         };
 
@@ -159,4 +164,21 @@
   };
 
   mapPins.addEventListener('click', mapPinHandler);
+
+  // деакцивация карты
+  window.deactivateMap = function () {
+    map.classList.add('map--faded');
+
+    var renderingPins = mapPins.querySelector('.rendering-pins');
+    mapPins.removeChild(renderingPins);
+
+    if (mapPins.nextElementSibling === window.popupNotice) {
+      map.removeChild(window.popupNotice);
+    }
+
+    resetAddress();
+
+    mainMapPin.addEventListener('mouseup', mainPinClickHandler);
+    mainMapPin.addEventListener('keydown', onMainPinEnterPress);
+  };
 })();
