@@ -12,8 +12,6 @@
 
   var mapFilters = document.querySelector('.map__filters-container');
 
-  var buttonHandle = mainMapPin.querySelector('img');
-
   var coordsRange = {
     y: {
       start: 375,
@@ -49,7 +47,7 @@
   };
 
   // захват - переджвижение - отпускание
-  buttonHandle.addEventListener('mousedown', function (evt) {
+  mainMapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     var startCoords = {
