@@ -1,36 +1,28 @@
 'use strict';
 
 (function () {
-  var MIN_PRICE = {
+  window.noticeForm = document.querySelector('.notice__form');
+  window.noticeFormFieldset = window.noticeForm.querySelectorAll('fieldset');
+  var typeOfApartament = window.noticeForm.querySelector('#type');
+  var timeIn = window.noticeForm.querySelector('#timein');
+  var timeOut = window.noticeForm.querySelector('#timeout');
+  var roomNumber = window.noticeForm.querySelector('#room_number');
+  var capacityOfApartament = window.noticeForm.querySelector('#capacity');
+  var capacityOptions = capacityOfApartament.querySelectorAll('option');
+  var resetButton = window.noticeForm.querySelector('.form__reset');
+
+  var apartmentTypeToMinPrice = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
   };
-  var GUESTS = {
+  var roomsToGuests = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0']
   };
-
-  window.noticeForm = document.querySelector('.notice__form');
-
-  window.noticeFormFieldset = window.noticeForm.querySelectorAll('fieldset');
-
-  var typeOfApartament = window.noticeForm.querySelector('#type');
-
-  var timeIn = window.noticeForm.querySelector('#timein');
-
-  var timeOut = window.noticeForm.querySelector('#timeout');
-
-  var roomNumber = window.noticeForm.querySelector('#room_number');
-
-  var capacityOfApartament = window.noticeForm.querySelector('#capacity');
-
-  var capacityOptions = capacityOfApartament.querySelectorAll('option');
-
-  var resetButton = window.noticeForm.querySelector('.form__reset');
 
   // все поля формы неактивные
   for (var i = 0; i < window.noticeFormFieldset.length; i++) {
@@ -57,7 +49,7 @@
 
   // изменение минимального значения цены
   var changeMinPrice = function () {
-    var price = MIN_PRICE[typeOfApartament.value];
+    var price = apartmentTypeToMinPrice[typeOfApartament.value];
     window.noticeForm.querySelector('#price').setAttribute('min', price);
   };
 
@@ -66,7 +58,7 @@
   // валидация гостей
   var changeGuests = function () {
     capacityOfApartament.innerHTML = '';
-    var guest = GUESTS[roomNumber.value];
+    var guest = roomsToGuests[roomNumber.value];
     for (var j = 0; j < guest.length; j++) {
       for (var y = 0; y < capacityOptions.length; y++) {
         if (capacityOptions[y].value === guest[j]) {
@@ -90,11 +82,13 @@
 
   resetButton.addEventListener('click', function () {
     deactivateForm();
+    window.deactivateFilters();
     window.deactivateMap();
   });
 
   var onLoad = function () {
     deactivateForm();
+    window.deactivateFilters();
     window.deactivateMap();
   };
 

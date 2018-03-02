@@ -3,24 +3,22 @@
 (function () {
   window.mapCard = window.similarMapPinTemplate.querySelector('.map__card').cloneNode(true);
 
+  var PictureOfApartment = {
+    HEIGHT: 50,
+    WIDTH: 50
+  };
+
   window.renderNotice = function (notice) {
     window.mapCard.querySelector('.popup__avatar').src = notice.author.avatar;
-
     window.mapCard.querySelector('h3').textContent = notice.offer.title;
-
     window.mapCard.querySelector('small').textContent = notice.offer.address;
-
     window.mapCard.querySelector('.popup__price').textContent = notice.offer.price + '\u20BD' + '/ночь';
-
     window.mapCard.querySelector('h4').textContent = 'Квартира';
     if (notice.offer.type === 'house') {
       window.mapCard.querySelector('h4').textContent = 'Дом';
     }
-
     window.mapCard.querySelector('.guests-and-rooms').textContent = notice.offer.rooms + ' комнаты для ' + notice.offer.guests + ' гостей';
-
     window.mapCard.querySelector('.checkin-and-checkout').textContent = 'Заезд после ' + notice.offer.checkin + ', выезд до ' + notice.offer.checkout;
-
     var popupFeatures = window.mapCard.querySelector('.popup__features');
     popupFeatures.innerHTML = ' ';
     if (notice.offer.features.length === 0) {
@@ -35,7 +33,6 @@
       }
     }
     window.mapCard.querySelector('.description').textContent = notice.offer.description;
-
     var popupPictures = window.mapCard.querySelector('.popup__pictures');
     popupPictures.innerHTML = ' ';
     if (notice.offer.photos.length === 0) {
@@ -47,8 +44,8 @@
         popupPictures.insertAdjacentHTML('afterbegin', newPicture);
         var picture = popupPictures.querySelector('img');
         picture.src = notice.offer.photos[j];
-        picture.width = 50;
-        picture.height = 50;
+        picture.width = PictureOfApartment.WIDTH;
+        picture.height = PictureOfApartment.HEIGHT;
       }
     }
   };

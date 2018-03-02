@@ -18,10 +18,8 @@
   };
 
   // загрузка данных
-  window.onLoad = function (noticesArray) {
-    for (var j = 0; j < noticesArray.length; j++) {
-      window.notices.push(noticesArray[j]);
-    }
+  window.onLoad = function (data) {
+    window.notices = data;
   };
 
   window.load(window.onLoad, window.onError);

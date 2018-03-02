@@ -1,17 +1,15 @@
 'use strict';
 
 (function () {
-  var MAIN_PIN_HEIGHT = 62;
-  var MAIN_PIN_TAIL = 20;
-
   var map = document.querySelector('.map');
-
   var mapPins = document.querySelector('.map__pins');
-
   var mainMapPin = mapPins.querySelector('.map__pin--main');
-
   var mapFilters = document.querySelector('.map__filters-container');
 
+  var MainPin = {
+    HEIGHT: 62,
+    TAIL: 20
+  };
   var coordsRange = {
     y: {
       start: 375,
@@ -34,7 +32,7 @@
   window.setAddress = function () {
     noticeAddress.setAttribute('readonly', 'readonly');
     mainPinX = mainMapPin.offsetLeft;
-    mainPinY = mainMapPin.offsetTop + MAIN_PIN_HEIGHT / 2 + MAIN_PIN_TAIL;
+    mainPinY = mainMapPin.offsetTop + MainPin.HEIGHT / 2 + MainPin.TAIL;
     noticeAddress.value = mainPinX + ' , ' + mainPinY;
   };
 
@@ -100,20 +98,14 @@
   // активация карты и формы в первый раз
   var onMainPinEnterPress = function (evt) {
     window.keyboard.isEnterEvent(evt, activateMap);
+    window.showForm();
   };
 
+  // активация карты и запуск рендеринга пинов
   var activateMap = function () {
     map.classList.remove('map--faded');
 
-    // отображение загруженных пинов на карте
-    var fragment = document.createDocumentFragment();
-    for (var j = 0; j < window.notices.length; j++) {
-      fragment.appendChild(window.renderMapPin(window.notices[j]));
-    }
-    var div = document.createElement('div');
-    div.className = 'rendering-pins';
-    div.appendChild(fragment);
-    mapPins.appendChild(div);
+    window.render(window.notices);
 
     mainMapPin.removeEventListener('mouseup', mainPinClickHandler);
     mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
@@ -126,6 +118,16 @@
 
   mainMapPin.addEventListener('mouseup', mainPinClickHandler);
   mainMapPin.addEventListener('keydown', onMainPinEnterPress);
+
+  // скрытие объявления
+  var closePopup = function () {
+    window.popupNotice.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+  var onPopupEscPress = function (e) {
+    window.keyboard.isEscEvent(e, closePopup);
+  };
 
   // объявление при клике на пин
   var mapPinHandler = function (evt) {
@@ -142,26 +144,21 @@
           window.popupNotice.classList.remove('hidden');
         }
 
-        var onPopupEscPress = function (e) {
-          window.keyboard.isEscEvent(e, closePopup);
-        };
-
-        var closePopup = function () {
-          window.popupNotice.classList.add('hidden');
-          document.removeEventListener('keydown', onPopupEscPress);
-        };
-
         document.addEventListener('keydown', onPopupEscPress);
-
         closePopupButton.addEventListener('click', closePopup);
-
-        return;
       }
       target = target.parentNode;
     }
   };
 
   mapPins.addEventListener('click', mapPinHandler);
+
+  // удаление объявления
+  window.deleteNotice = function () {
+    if (mapPins.nextElementSibling === window.popupNotice) {
+      map.removeChild(window.popupNotice);
+    }
+  };
 
   // деакцивация карты
   window.deactivateMap = function () {
@@ -170,10 +167,7 @@
     var renderingPins = mapPins.querySelector('.rendering-pins');
     mapPins.removeChild(renderingPins);
 
-    if (mapPins.nextElementSibling === window.popupNotice) {
-      map.removeChild(window.popupNotice);
-    }
-
+    window.deleteNotice();
     resetAddress();
 
     mainMapPin.addEventListener('mouseup', mainPinClickHandler);
