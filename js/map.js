@@ -98,6 +98,7 @@
   // активация карты и формы в первый раз
   var onMainPinEnterPress = function (evt) {
     window.keyboard.isEnterEvent(evt, activateMap);
+    window.activateFilters();
     window.showForm();
   };
 
@@ -113,6 +114,7 @@
 
   var mainPinClickHandler = function () {
     activateMap();
+    window.activateFilters();
     window.showForm();
   };
 
