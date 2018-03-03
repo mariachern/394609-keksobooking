@@ -1,15 +1,18 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
-  var mainMapPin = mapPins.querySelector('.map__pin--main');
-  var mapFilters = document.querySelector('.map__filters-container');
-
   var MainPin = {
     HEIGHT: 62,
     TAIL: 20
   };
+
+  var map = document.querySelector('.map');
+  var mapPins = document.querySelector('.map__pins');
+  var mapFilters = document.querySelector('.map__filters-container');
+  var noticeAddress = document.querySelector('input[name=address]');
+
+  var mainMapPin = mapPins.querySelector('.map__pin--main');
+
   var coordsRange = {
     y: {
       start: 375,
@@ -26,7 +29,6 @@
   // заполнение поля адреса
   var mainPinX = mainMapPin.offsetLeft;
   var mainPinY = mainMapPin.offsetTop;
-  var noticeAddress = document.getElementsByName('address')[0];
   noticeAddress.value = mainPinX + ' , ' + mainPinY;
 
   window.setAddress = function () {
@@ -44,7 +46,7 @@
     noticeAddress.value = mainPinX + ' , ' + mainPinY;
   };
 
-  // захват - переджвижение - отпускание
+  // нажатие - перетаскивание - отпускание
   mainMapPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -105,20 +107,19 @@
   // активация карты и запуск рендеринга пинов
   var activateMap = function () {
     map.classList.remove('map--faded');
-
     window.render(window.notices);
 
-    mainMapPin.removeEventListener('mouseup', mainPinClickHandler);
+    mainMapPin.removeEventListener('mouseup', onMainPinClick);
     mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
   };
 
-  var mainPinClickHandler = function () {
+  var onMainPinClick = function () {
     activateMap();
     window.activateFilters();
     window.showForm();
   };
 
-  mainMapPin.addEventListener('mouseup', mainPinClickHandler);
+  mainMapPin.addEventListener('mouseup', onMainPinClick);
   mainMapPin.addEventListener('keydown', onMainPinEnterPress);
 
   // скрытие объявления
@@ -132,7 +133,7 @@
   };
 
   // объявление при клике на пин
-  var mapPinHandler = function (evt) {
+  var onPapPinClick = function (evt) {
     var target = evt.target;
     while (target !== mapPins) {
       if (target.className === 'map__pin') {
@@ -153,7 +154,7 @@
     }
   };
 
-  mapPins.addEventListener('click', mapPinHandler);
+  mapPins.addEventListener('click', onPapPinClick);
 
   // удаление объявления
   window.deleteNotice = function () {
@@ -172,7 +173,7 @@
     window.deleteNotice();
     resetAddress();
 
-    mainMapPin.addEventListener('mouseup', mainPinClickHandler);
+    mainMapPin.addEventListener('mouseup', onMainPinClick);
     mainMapPin.addEventListener('keydown', onMainPinEnterPress);
   };
 })();

@@ -6,12 +6,12 @@
     WIDTH: 50
   };
 
-  var div = document.createElement('div');
-  div.className = 'rendering-pins';
-
   window.similarMapPinTemplate = document.querySelector('template').content;
   var fragment = document.createDocumentFragment();
   var mapPins = document.querySelector('.map__pins');
+
+  var pinsBlock = document.createElement('div');
+  pinsBlock.className = 'rendering-pins';
 
   window.createMapPin = function (notice) {
     window.mapPin = window.similarMapPinTemplate.querySelector('.map__pin').cloneNode(true);
@@ -27,7 +27,7 @@
   // рендерингов пинов
   window.render = function (data) {
     var takeNumber = data.length > 5 ? 5 : data.length;
-    mapPins.appendChild(div);
+    mapPins.appendChild(pinsBlock);
     var renderingPin = document.querySelector('.rendering-pins');
     renderingPin.innerHTML = '';
     for (var i = 0; i < takeNumber; i++) {

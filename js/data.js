@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var TIMEOUT_ERROR = 10000;
+
   window.notices = [];
 
   window.onError = function (errorMessage) {
@@ -14,7 +16,7 @@
       node.style.display = 'none';
     };
 
-    setTimeout(removeErrorPopup, 10000);
+    setTimeout(removeErrorPopup, TIMEOUT_ERROR);
   };
 
   // загрузка данных
