@@ -1,49 +1,44 @@
 'use strict';
 
 (function () {
-  var MIN_PRICE = {
+  window.noticeForm = document.querySelector('.notice__form');
+  window.noticeFormFieldset = window.noticeForm.querySelectorAll('fieldset');
+
+  var typeOfApartment = window.noticeForm.querySelector('#type');
+  var timeIn = window.noticeForm.querySelector('#timein');
+  var timeOut = window.noticeForm.querySelector('#timeout');
+  var roomNumber = window.noticeForm.querySelector('#room_number');
+  var capacityOfApartment = window.noticeForm.querySelector('#capacity');
+  var resetButton = window.noticeForm.querySelector('.form__reset');
+
+  var capacityOptions = capacityOfApartment.querySelectorAll('option');
+
+  var apartmentTypeToMinPrice = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
   };
-  var GUESTS = {
+
+  var roomsToGuests = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0']
   };
 
-  window.noticeForm = document.querySelector('.notice__form');
-
-  window.noticeFormFieldset = window.noticeForm.querySelectorAll('fieldset');
-
-  var typeOfApartament = window.noticeForm.querySelector('#type');
-
-  var timeIn = window.noticeForm.querySelector('#timein');
-
-  var timeOut = window.noticeForm.querySelector('#timeout');
-
-  var roomNumber = window.noticeForm.querySelector('#room_number');
-
-  var capacityOfApartament = window.noticeForm.querySelector('#capacity');
-
-  var capacityOptions = capacityOfApartament.querySelectorAll('option');
-
-  var resetButton = window.noticeForm.querySelector('.form__reset');
-
   // все поля формы неактивные
-  for (var i = 0; i < window.noticeFormFieldset.length; i++) {
-    window.noticeFormFieldset[i].disabled = true;
-  }
+  window.noticeFormFieldset.forEach(function (el) {
+    el.disabled = true;
+  });
 
   // активация формы
   window.showForm = function () {
     window.noticeForm.classList.remove('notice__form--disabled');
-    for (var j = 0; j < window.noticeFormFieldset.length; j++) {
-      window.noticeFormFieldset[j].disabled = false;
+    window.noticeFormFieldset.forEach(function (el) {
+      el.disabled = false;
       window.setAddress();
-    }
+    });
   };
 
   // заполнение полей времени
@@ -57,50 +52,56 @@
 
   // изменение минимального значения цены
   var changeMinPrice = function () {
-    var price = MIN_PRICE[typeOfApartament.value];
+    var price = apartmentTypeToMinPrice[typeOfApartment.value];
     window.noticeForm.querySelector('#price').setAttribute('min', price);
   };
 
-  typeOfApartament.addEventListener('change', changeMinPrice);
+  typeOfApartment.addEventListener('change', function () {
+    changeMinPrice();
+  });
 
   // валидация гостей
   var changeGuests = function () {
-    capacityOfApartament.innerHTML = '';
-    var guest = GUESTS[roomNumber.value];
-    for (var j = 0; j < guest.length; j++) {
-      for (var y = 0; y < capacityOptions.length; y++) {
-        if (capacityOptions[y].value === guest[j]) {
-          capacityOptions[y].classList.remove('hidden');
-          capacityOfApartament.appendChild(capacityOptions[y]);
+    capacityOfApartment.innerHTML = '';
+    var guest = roomsToGuests[roomNumber.value];
+    for (var i = 0; i < guest.length; i++) {
+      capacityOptions.forEach(function (el) {
+        if (el.value === guest[i]) {
+          el.classList.remove('hidden');
+          capacityOfApartment.appendChild(el);
         }
-      }
+      });
     }
   };
 
-  roomNumber.addEventListener('change', changeGuests);
+  roomNumber.addEventListener('change', function () {
+    changeGuests();
+  });
 
   // деакцивация формы
   var deactivateForm = function () {
     window.noticeForm.classList.add('notice__form--disabled');
-    for (var y = 0; y < window.noticeFormFieldset.length; y++) {
-      window.noticeFormFieldset[y].disabled = true;
-    }
+    window.noticeFormFieldset.forEach(function (el) {
+      el.disabled = true;
+    });
     window.noticeForm.reset();
   };
 
   resetButton.addEventListener('click', function () {
     deactivateForm();
+    window.deactivateFilters();
     window.deactivateMap();
   });
 
   var onLoad = function () {
     deactivateForm();
+    window.deactivateFilters();
     window.deactivateMap();
   };
 
   // отправка формы
   window.noticeForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(window.noticeForm), onLoad, window.onError);
     evt.preventDefault();
+    window.upload(new FormData(window.noticeForm), onLoad, window.onError);
   });
 })();

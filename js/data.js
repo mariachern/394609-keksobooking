@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var TIMEOUT_ERROR = 10000;
+
   window.notices = [];
 
   window.onError = function (errorMessage) {
@@ -14,14 +16,12 @@
       node.style.display = 'none';
     };
 
-    setTimeout(removeErrorPopup, 10000);
+    setTimeout(removeErrorPopup, TIMEOUT_ERROR);
   };
 
   // загрузка данных
-  window.onLoad = function (noticesArray) {
-    for (var j = 0; j < noticesArray.length; j++) {
-      window.notices.push(noticesArray[j]);
-    }
+  window.onLoad = function (data) {
+    window.notices = data;
   };
 
   window.load(window.onLoad, window.onError);
