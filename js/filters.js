@@ -85,7 +85,7 @@
       var isGuestsMatch = apartmentGuests === 'any' ? true : el.offer.guests.toString() === apartmentGuests;
       var isPriceMatch = apartmentPrice === 'any' ? true : getPriceString(el.offer.price) === apartmentPrice;
 
-      return isTypeMatch && isRoomsMatch && isGuestsMatch && isPriceMatch && isPriceMatch && checkFeatures(el.offer.features, selectedFeatures);
+      return isTypeMatch && isRoomsMatch && isGuestsMatch && isPriceMatch && checkFeatures(el.offer.features, selectedFeatures);
     });
     window.render(filteredNotices);
   };
