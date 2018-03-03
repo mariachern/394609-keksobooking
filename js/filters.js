@@ -6,12 +6,17 @@
   var filterFeatures = window.filters.querySelector('.map__filter-set');
   var filterFeatureElements = filterFeatures.querySelectorAll('input');
 
-  var apartmentType = window.filters.querySelector('#housing-type').value;
-  var apartmentPrice = window.filters.querySelector('#housing-price').value;
-  var apartmentRooms = window.filters.querySelector('#housing-rooms').value;
-  var apartmentGuests = window.filters.querySelector('#housing-guests').value;
+  var apartmentType = window.filters.querySelector('#housing-type');
+  var apartmentRooms = window.filters.querySelector('#housing-rooms');
+  var apartmentGuests = window.filters.querySelector('#housing-guests');
+  var apartmentPrice = window.filters.querySelector('#housing-price');
 
   var selectedFeatures = [];
+
+  var typeValue = apartmentType.value;
+  var roomsValue = apartmentRooms.value;
+  var guestsValue = apartmentGuests.value;
+  var priceValue = apartmentPrice.value;
 
   // фильтры неактивны
   filterFeatures.disabled = true;
@@ -38,13 +43,13 @@
     window.filters.reset();
   };
 
-  var getSelectedElement = function (evt) {
+  var updateFilterValues = function (evt) {
     var target = evt.target;
     if (target.className === 'map__filter') {
-      apartmentType = window.filters.querySelector('#housing-type').value;
-      apartmentPrice = window.filters.querySelector('#housing-price').value;
-      apartmentRooms = window.filters.querySelector('#housing-rooms').value;
-      apartmentGuests = window.filters.querySelector('#housing-guests').value;
+      typeValue = apartmentType.value;
+      roomsValue = apartmentRooms.value;
+      guestsValue = apartmentGuests.value;
+      priceValue = apartmentPrice.value;
     }
     if (target.tagName === 'INPUT') {
       selectedFeatures = [];
@@ -80,10 +85,10 @@
         return true;
       };
 
-      var isTypeMatch = apartmentType === 'any' ? true : el.offer.type === apartmentType;
-      var isRoomsMatch = apartmentRooms === 'any' ? true : el.offer.rooms.toString() === apartmentRooms;
-      var isGuestsMatch = apartmentGuests === 'any' ? true : el.offer.guests.toString() === apartmentGuests;
-      var isPriceMatch = apartmentPrice === 'any' ? true : getPriceString(el.offer.price) === apartmentPrice;
+      var isTypeMatch = typeValue === 'any' ? true : el.offer.type === typeValue;
+      var isRoomsMatch = roomsValue === 'any' ? true : el.offer.rooms.toString() === roomsValue;
+      var isGuestsMatch = guestsValue === 'any' ? true : el.offer.guests.toString() === guestsValue;
+      var isPriceMatch = priceValue === 'any' ? true : getPriceString(el.offer.price) === priceValue;
 
       return isTypeMatch && isRoomsMatch && isGuestsMatch && isPriceMatch && checkFeatures(el.offer.features, selectedFeatures);
     });
@@ -92,7 +97,7 @@
 
   window.filters.addEventListener('change', function (evt) {
     window.deleteNotice();
-    getSelectedElement(evt);
+    updateFilterValues(evt);
     window.debounce(updateNotices);
   });
 })();
