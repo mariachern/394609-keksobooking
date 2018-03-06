@@ -31,19 +31,39 @@
   var mainPinY = mainMapPin.offsetTop;
   noticeAddress.value = mainPinX + ' , ' + mainPinY;
 
-  window.setAddress = function () {
-    noticeAddress.setAttribute('readonly', 'readonly');
-    mainPinX = mainMapPin.offsetLeft;
-    mainPinY = mainMapPin.offsetTop + MainPin.HEIGHT / 2 + MainPin.TAIL;
-    noticeAddress.value = mainPinX + ' , ' + mainPinY;
+  window.address = {
+    set: function () {
+      noticeAddress.setAttribute('readonly', 'readonly');
+      mainPinX = mainMapPin.offsetLeft;
+      mainPinY = mainMapPin.offsetTop + MainPin.HEIGHT / 2 + MainPin.TAIL;
+      noticeAddress.value = mainPinX + ' , ' + mainPinY;
+    },
+    reset: function () {
+      mainPinX = coordsRange.x.start;
+      mainPinY = coordsRange.y.start;
+      mainMapPin.style.left = mainPinX + 'px';
+      mainMapPin.style.top = mainPinY + 'px';
+      noticeAddress.value = mainPinX + ' , ' + mainPinY;
+    }
   };
 
-  var resetAddress = function () {
-    mainPinX = coordsRange.x.start;
-    mainPinY = coordsRange.y.start;
-    mainMapPin.style.left = mainPinX + 'px';
-    mainMapPin.style.top = mainPinY + 'px';
-    noticeAddress.value = mainPinX + ' , ' + mainPinY;
+  window.map = {
+    activate: function () {
+      map.classList.remove('map--faded');
+
+      mainMapPin.removeEventListener('mouseup', onMainPinClick);
+      mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
+    },
+    deactivate: function () {
+      map.classList.add('map--faded');
+      var renderingPins = mapPins.querySelector('.rendering-pins');
+      mapPins.removeChild(renderingPins);
+      window.deleteNotice();
+      window.address.reset();
+
+      mainMapPin.addEventListener('mouseup', onMainPinClick);
+      mainMapPin.addEventListener('keydown', onMainPinEnterPress);
+    }
   };
 
   // нажатие - перетаскивание - отпускание
@@ -87,7 +107,7 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      window.setAddress();
+      window.address.set();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -97,43 +117,43 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  // активация карты и формы в первый раз
-  var onMainPinEnterPress = function (evt) {
-    window.keyboard.isEnterEvent(evt, activateMap);
-    window.activateFilters();
-    window.showForm();
+  // удаление объявления
+  window.deleteNotice = function () {
+    if (mapPins.nextElementSibling === window.popupNotice) {
+      map.removeChild(window.popupNotice);
+    }
   };
 
-  // активация карты и запуск рендеринга пинов
-  var activateMap = function () {
-    map.classList.remove('map--faded');
-    window.render(window.notices);
+  // активация карты и формы в первый раз
+  var onMainPinEnterPress = function (evt) {
+    window.keyboard.isEnterEvent(evt, window.map.activate);
+    window.form.activate();
 
-    mainMapPin.removeEventListener('mouseup', onMainPinClick);
-    mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
+    window.load(window.onLoad, window.onError); // загрузка данных
   };
 
   var onMainPinClick = function () {
-    activateMap();
-    window.activateFilters();
-    window.showForm();
+    window.map.activate();
+    window.form.activate();
+
+    window.load(window.onLoad, window.onError); // загрузка данных
   };
 
   mainMapPin.addEventListener('mouseup', onMainPinClick);
   mainMapPin.addEventListener('keydown', onMainPinEnterPress);
 
   // скрытие объявления
-  var closePopup = function () {
+  var closeNotice = function () {
     window.popupNotice.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
   var onPopupEscPress = function (e) {
-    window.keyboard.isEscEvent(e, closePopup);
+    window.keyboard.isEscEvent(e, closeNotice);
   };
 
   // объявление при клике на пин
-  var onPapPinClick = function (evt) {
+  var onMapPinClick = function (evt) {
     var target = evt.target;
     while (target !== mapPins) {
       if (target.className === 'map__pin') {
@@ -148,32 +168,11 @@
         }
 
         document.addEventListener('keydown', onPopupEscPress);
-        closePopupButton.addEventListener('click', closePopup);
+        closePopupButton.addEventListener('click', closeNotice);
       }
       target = target.parentNode;
     }
   };
 
-  mapPins.addEventListener('click', onPapPinClick);
-
-  // удаление объявления
-  window.deleteNotice = function () {
-    if (mapPins.nextElementSibling === window.popupNotice) {
-      map.removeChild(window.popupNotice);
-    }
-  };
-
-  // деакцивация карты
-  window.deactivateMap = function () {
-    map.classList.add('map--faded');
-
-    var renderingPins = mapPins.querySelector('.rendering-pins');
-    mapPins.removeChild(renderingPins);
-
-    window.deleteNotice();
-    resetAddress();
-
-    mainMapPin.addEventListener('mouseup', onMainPinClick);
-    mainMapPin.addEventListener('keydown', onMainPinEnterPress);
-  };
+  mapPins.addEventListener('click', onMapPinClick);
 })();

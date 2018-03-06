@@ -32,13 +32,22 @@
     el.disabled = true;
   });
 
-  // активация формы
-  window.showForm = function () {
-    window.noticeForm.classList.remove('notice__form--disabled');
-    window.noticeFormFieldset.forEach(function (el) {
-      el.disabled = false;
-      window.setAddress();
-    });
+  window.form = {
+    activate: function () {
+      window.noticeForm.classList.remove('notice__form--disabled');
+      window.noticeFormFieldset.forEach(function (el) {
+        el.disabled = false;
+        window.address.set();
+      });
+    },
+    deactivate: function () {
+      window.noticeForm.classList.add('notice__form--disabled');
+      window.noticeFormFieldset.forEach(function (el) {
+        el.disabled = true;
+      });
+      window.clearAvatarInput();
+      window.noticeForm.reset();
+    }
   };
 
   // заполнение полей времени
@@ -78,25 +87,16 @@
     changeGuests();
   });
 
-  // деакцивация формы
-  var deactivateForm = function () {
-    window.noticeForm.classList.add('notice__form--disabled');
-    window.noticeFormFieldset.forEach(function (el) {
-      el.disabled = true;
-    });
-    window.noticeForm.reset();
-  };
-
   resetButton.addEventListener('click', function () {
-    deactivateForm();
-    window.deactivateFilters();
-    window.deactivateMap();
+    window.form.deactivate();
+    window.filters.deactivate();
+    window.map.deactivate();
   });
 
   var onLoad = function () {
-    deactivateForm();
-    window.deactivateFilters();
-    window.deactivateMap();
+    window.form.deactivate();
+    window.filters.deactivate();
+    window.map.deactivate();
   };
 
   // отправка формы

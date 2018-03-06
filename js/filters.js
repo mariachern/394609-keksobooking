@@ -1,15 +1,15 @@
 'use strict';
 
 (function () {
-  window.filters = document.querySelector('.map__filters');
-  var filterElements = window.filters.querySelectorAll('select');
-  var filterFeatures = window.filters.querySelector('.map__filter-set');
+  window.filtersForm = document.querySelector('.map__filters');
+  var filterElements = window.filtersForm.querySelectorAll('select');
+  var filterFeatures = window.filtersForm.querySelector('.map__filter-set');
   var filterFeatureElements = filterFeatures.querySelectorAll('input');
 
-  var apartmentType = window.filters.querySelector('#housing-type');
-  var apartmentRooms = window.filters.querySelector('#housing-rooms');
-  var apartmentGuests = window.filters.querySelector('#housing-guests');
-  var apartmentPrice = window.filters.querySelector('#housing-price');
+  var apartmentType = window.filtersForm.querySelector('#housing-type');
+  var apartmentRooms = window.filtersForm.querySelector('#housing-rooms');
+  var apartmentGuests = window.filtersForm.querySelector('#housing-guests');
+  var apartmentPrice = window.filtersForm.querySelector('#housing-price');
 
   var selectedFeatures = [];
 
@@ -24,23 +24,20 @@
     el.disabled = true;
   });
 
-  // активация фильтров
-  window.activateFilters = function () {
-    if (window.notices.length !== 0) {
+  window.filters = {
+    activate: function () {
       filterFeatures.disabled = false;
       filterElements.forEach(function (el) {
         el.disabled = false;
       });
+    },
+    deactivate: function () {
+      filterFeatures.disabled = true;
+      filterElements.forEach(function (el) {
+        el.disabled = true;
+      });
+      window.filtersForm.reset();
     }
-  };
-
-  // деакцивация фильтров
-  window.deactivateFilters = function () {
-    filterFeatures.disabled = true;
-    filterElements.forEach(function (el) {
-      el.disabled = true;
-    });
-    window.filters.reset();
   };
 
   var updateFilterValues = function (evt) {
@@ -51,7 +48,7 @@
       guestsValue = apartmentGuests.value;
       priceValue = apartmentPrice.value;
     }
-    if (target.tagName === 'INPUT') {
+    if (target.tagName.toLowerCase() === 'input') {
       selectedFeatures = [];
       filterFeatureElements.forEach(function (el) {
         if (el.checked) {
@@ -95,7 +92,7 @@
     window.render(filteredNotices);
   };
 
-  window.filters.addEventListener('change', function (evt) {
+  window.filtersForm.addEventListener('change', function (evt) {
     window.deleteNotice();
     updateFilterValues(evt);
     window.debounce(updateNotices);

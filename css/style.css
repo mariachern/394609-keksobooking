@@ -734,7 +734,8 @@ textarea:focus
     margin-left: 20px;
 }
 
-.notice__form .drop-zone
+.notice__form .drop-zone,
+.upload .form__photo
 {
     font-size: 14px;
 
@@ -759,9 +760,43 @@ fieldset[disabled] .drop-zone:hover
     color: #999;
 }
 
-.form__photo-container
+.upload .form__photo
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 140px;
+
+    padding: 0;
+    margin: 0 20px 10px 0;
+
+    overflow: hidden;
+
+    cursor: move;
+}
+
+.upload .form__photo:first-of-type
+{
+    margin-left: 20px;
+}
+
+.form__photo img
+{
+    max-width: 100%;
+    max-height: auto;
+
+    padding: 0;
+}
+
+.form__photo-container .drop-zone
 {
     width: 140px;
+}
+
+.form__photo-container .upload
+{
+    flex-wrap: wrap;
 }
 
 .form__element--submit

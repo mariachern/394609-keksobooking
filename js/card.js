@@ -1,14 +1,14 @@
 'use strict';
 
 (function () {
-  window.mapCard = window.similarMapPinTemplate.querySelector('.map__card').cloneNode(true);
-  var popupFeatures = window.mapCard.querySelector('.popup__features');
-  var popupPictures = window.mapCard.querySelector('.popup__pictures');
-
   var PictureOfApartment = {
     HEIGHT: 50,
     WIDTH: 50
   };
+
+  window.mapCard = window.similarMapPinTemplate.querySelector('.map__card').cloneNode(true);
+  var popupFeatures = window.mapCard.querySelector('.popup__features');
+  var popupPictures = window.mapCard.querySelector('.popup__pictures');
 
   window.renderNotice = function (notice) {
     window.mapCard.querySelector('.popup__avatar').src = notice.author.avatar;

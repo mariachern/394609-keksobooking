@@ -23,6 +23,4 @@
   window.onLoad = function (data) {
     window.notices = data;
   };
-
-  window.load(window.onLoad, window.onError);
 })();

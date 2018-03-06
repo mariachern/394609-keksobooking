@@ -11,6 +11,10 @@
     window.xhr.addEventListener('load', function () {
       if (window.xhr.status === SUCCESS_STATUS) {
         onLoad(window.xhr.response);
+        if (method === 'GET') {
+          window.render(window.notices);
+          window.filters.activate();
+        }
       } else {
         onError('Статус ответа: ' + window.xhr.status + ' ' + window.xhr.statusText);
       }
