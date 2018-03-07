@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  window.FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var DEFAULT_IMG = 'img/muffin.png';
 
   var avatarFileChooser = document.querySelector('.notice__photo input[type=file]');
@@ -11,7 +10,7 @@
     var file = image.files[0];
     var fileName = file.name.toLowerCase();
 
-    var matches = window.FILE_TYPES.some(function (it) {
+    var matches = window.utils.imgTypes.some(function (it) {
       return fileName.endsWith(it);
     });
 

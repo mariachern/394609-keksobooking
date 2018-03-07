@@ -3,8 +3,10 @@
 (function () {
   var DEBOUNCE_INTERVAL = 500; // ms
   var TIMEOUT_ERROR = 10000; // ms
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var lastTimeout;
+
   var debounce = function (fun) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
@@ -27,6 +29,7 @@
   };
 
   window.utils = {
+    imgTypes: FILE_TYPES,
     debounce: debounce,
     showError: showError
   };

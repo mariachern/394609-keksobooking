@@ -6,15 +6,16 @@
     WIDTH: 50
   };
 
-  window.similarMapPinTemplate = document.querySelector('template').content;
-  var fragment = document.createDocumentFragment();
+  var similarMapPinTemplate = document.querySelector('template').content;
   var mapPins = document.querySelector('.map__pins');
 
+  var fragment = document.createDocumentFragment();
   var pinsBlock = document.createElement('div');
+
   pinsBlock.className = 'rendering-pins';
 
-  window.createMapPin = function (notice) {
-    window.mapPin = window.similarMapPinTemplate.querySelector('.map__pin').cloneNode(true);
+  var createPin = function (notice) {
+    window.mapPin = similarMapPinTemplate.querySelector('.map__pin').cloneNode(true);
     var mapPinImg = window.mapPin.querySelector('img');
     mapPinImg.src = notice.author.avatar;
 
@@ -25,16 +26,21 @@
   };
 
   // рендерингов пинов
-  window.render = function (data) {
+  var renderPin = function (data) {
     var takeNumber = data.length > 5 ? 5 : data.length;
     mapPins.appendChild(pinsBlock);
     var renderingPin = document.querySelector('.rendering-pins');
     renderingPin.innerHTML = '';
     for (var i = 0; i < takeNumber; i++) {
-      fragment.appendChild(window.createMapPin(data[i]));
-      window.mapPin.setAttribute('id', window.notices.indexOf(data[i]));
+      fragment.appendChild(createPin(data[i]));
+      window.mapPin.setAttribute('id', window.data.notices.indexOf(data[i]));
     }
     renderingPin.appendChild(fragment);
     mapPins.appendChild(renderingPin);
+  };
+
+  window.pin = {
+    similarMapPinTemplate: similarMapPinTemplate,
+    render: renderPin
   };
 })();

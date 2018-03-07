@@ -1,15 +1,15 @@
 'use strict';
 
 (function () {
-  window.noticeForm = document.querySelector('.notice__form');
-  window.noticeFormFieldset = window.noticeForm.querySelectorAll('fieldset');
+  var noticeForm = document.querySelector('.notice__form');
+  var noticeFormFieldset = noticeForm.querySelectorAll('fieldset');
 
-  var typeOfApartment = window.noticeForm.querySelector('#type');
-  var timeIn = window.noticeForm.querySelector('#timein');
-  var timeOut = window.noticeForm.querySelector('#timeout');
-  var roomNumber = window.noticeForm.querySelector('#room_number');
-  var capacityOfApartment = window.noticeForm.querySelector('#capacity');
-  var resetButton = window.noticeForm.querySelector('.form__reset');
+  var typeOfApartment = noticeForm.querySelector('#type');
+  var timeIn = noticeForm.querySelector('#timein');
+  var timeOut = noticeForm.querySelector('#timeout');
+  var roomNumber = noticeForm.querySelector('#room_number');
+  var capacityOfApartment = noticeForm.querySelector('#capacity');
+  var resetButton = noticeForm.querySelector('.form__reset');
 
   var capacityOptions = capacityOfApartment.querySelectorAll('option');
 
@@ -28,30 +28,30 @@
   };
 
   // все поля формы неактивные
-  window.noticeFormFieldset.forEach(function (el) {
+  noticeFormFieldset.forEach(function (el) {
     el.disabled = true;
   });
 
-  var activate = function () {
-    window.noticeForm.classList.remove('notice__form--disabled');
-    window.noticeFormFieldset.forEach(function (el) {
+  var activateForm = function () {
+    noticeForm.classList.remove('notice__form--disabled');
+    noticeFormFieldset.forEach(function (el) {
       el.disabled = false;
-      window.address.set();
+      window.map.setAddress();
     });
   };
 
-  var deactivate = function () {
-    window.noticeForm.classList.add('notice__form--disabled');
-    window.noticeFormFieldset.forEach(function (el) {
+  var deactivateForm = function () {
+    noticeForm.classList.add('notice__form--disabled');
+    noticeFormFieldset.forEach(function (el) {
       el.disabled = true;
     });
     window.avatar.clear();
     window.photos.remove();
-    window.noticeForm.reset();
+    noticeForm.reset();
   };
 
   // заполнение полей времени
-  window.noticeForm.querySelector('#time').addEventListener('change', function (evt) {
+  noticeForm.querySelector('#time').addEventListener('change', function (evt) {
     var target = evt.target;
     if (target === timeIn) {
       timeOut.selectedIndex = timeIn.selectedIndex;
@@ -62,7 +62,7 @@
   // изменение минимального значения цены
   var changeMinPrice = function () {
     var price = apartmentTypeToMinPrice[typeOfApartment.value];
-    window.noticeForm.querySelector('#price').setAttribute('min', price);
+    noticeForm.querySelector('#price').setAttribute('min', price);
   };
 
   typeOfApartment.addEventListener('change', function () {
@@ -88,25 +88,25 @@
   });
 
   resetButton.addEventListener('click', function () {
-    window.form.deactivate();
+    deactivateForm();
     window.filters.deactivate();
     window.map.deactivate();
   });
 
   var onLoad = function () {
-    window.form.deactivate();
+    deactivateForm();
     window.filters.deactivate();
     window.map.deactivate();
   };
 
   // отправка формы
-  window.noticeForm.addEventListener('submit', function (evt) {
+  noticeForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(window.noticeForm), onLoad, window.utils.showError);
+    window.backend.upload(new FormData(noticeForm), onLoad, window.utils.showError);
   });
 
   window.form = {
-    activate: activate,
-    deactivate: deactivate
+    activate: activateForm,
+    deactivate: deactivateForm
   };
 })();

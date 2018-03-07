@@ -31,34 +31,34 @@
   var mainPinY = mainMapPin.offsetTop;
   noticeAddress.value = mainPinX + ' , ' + mainPinY;
 
-  window.address = {
-    set: function () {
-      noticeAddress.setAttribute('readonly', 'readonly');
-      mainPinX = mainMapPin.offsetLeft;
-      mainPinY = mainMapPin.offsetTop + MainPin.HEIGHT / 2 + MainPin.TAIL;
-      noticeAddress.value = mainPinX + ' , ' + mainPinY;
-    },
-    reset: function () {
-      mainPinX = coordsRange.x.start;
-      mainPinY = coordsRange.y.start;
-      mainMapPin.style.left = mainPinX + 'px';
-      mainMapPin.style.top = mainPinY + 'px';
-      noticeAddress.value = mainPinX + ' , ' + mainPinY;
-    }
+  var setAddress = function () {
+    noticeAddress.setAttribute('readonly', 'readonly');
+    mainPinX = mainMapPin.offsetLeft;
+    mainPinY = mainMapPin.offsetTop + MainPin.HEIGHT / 2 + MainPin.TAIL;
+    noticeAddress.value = mainPinX + ' , ' + mainPinY;
   };
 
-  var activate = function () {
+  var resetAddress = function () {
+    mainPinX = coordsRange.x.start;
+    mainPinY = coordsRange.y.start;
+    mainMapPin.style.left = mainPinX + 'px';
+    mainMapPin.style.top = mainPinY + 'px';
+    noticeAddress.value = mainPinX + ' , ' + mainPinY;
+  };
+
+  var activateMap = function () {
     map.classList.remove('map--faded');
     mainMapPin.removeEventListener('mouseup', onMainPinClick);
     mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
   };
 
-  var deactivate = function () {
+  var deactivateMap = function () {
     map.classList.add('map--faded');
     var renderingPins = mapPins.querySelector('.rendering-pins');
     mapPins.removeChild(renderingPins);
-    window.deleteNotice();
-    window.address.reset();
+    deleteNotice();
+    resetAddress();
+
     mainMapPin.addEventListener('mouseup', onMainPinClick);
     mainMapPin.addEventListener('keydown', onMainPinEnterPress);
   };
@@ -104,7 +104,7 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      window.address.set();
+      setAddress();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -115,7 +115,7 @@
   });
 
   // удаление объявления
-  window.deleteNotice = function () {
+  var deleteNotice = function () {
     if (mapPins.nextElementSibling === window.popupNotice) {
       map.removeChild(window.popupNotice);
     }
@@ -130,7 +130,7 @@
   };
 
   var onMainPinClick = function () {
-    window.map.activate();
+    activateMap();
     window.form.activate();
 
     window.backend.load(window.data.onLoad, window.utils.showError); // загрузка данных
@@ -154,8 +154,8 @@
     var target = evt.target;
     while (target !== mapPins) {
       if (target.className === 'map__pin') {
-        window.renderNotice(window.notices[target.getAttribute('id')]);
-        map.insertBefore(window.mapCard, mapFilters);
+        window.card.render(window.data.notices[target.getAttribute('id')]);
+        map.insertBefore(window.card.mapCard, mapFilters);
 
         window.popupNotice = document.querySelector('.popup');
         var closePopupButton = document.querySelector('.popup__close');
@@ -174,7 +174,9 @@
   mapPins.addEventListener('click', onMapPinClick);
 
   window.map = {
-    activate: activate,
-    deactivate: deactivate
+    setAddress: setAddress,
+    deleteNotice: deleteNotice,
+    activate: activateMap,
+    deactivate: deactivateMap
   };
 })();

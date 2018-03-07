@@ -9,11 +9,20 @@
   var parentDraggedItem;
   var formApartmentPhotos;
 
+  var removePhotos = function () {
+    if (formApartmentPhotos) {
+      formApartmentPhotos.forEach(function (el) {
+        uploadingPhotos.removeChild(el);
+      });
+    }
+    formApartmentPhotos = false;
+  };
+
   photoApartmentFileChooser.addEventListener('change', function (evt) {
     var files = evt.target.files;
     for (var i = 0; i < files.length; i++) {
       var fileName = photoApartmentFileChooser.files[i].name.toLowerCase();
-      var matches = window.FILE_TYPES.some(function (it) {
+      var matches = window.window.utils.imgTypes.some(function (it) {
         return fileName.endsWith(it);
       });
 
@@ -57,15 +66,7 @@
     }
   });
 
-  var remove = function () {
-    if (formApartmentPhotos) {
-      formApartmentPhotos.forEach(function (el) {
-        uploadingPhotos.removeChild(el);
-      });
-    }
-  };
-
   window.photos = {
-    remove: remove
+    remove: removePhotos
   };
 })();

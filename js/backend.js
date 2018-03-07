@@ -12,7 +12,7 @@
       if (window.xhr.status === SUCCESS_STATUS) {
         onLoad(window.xhr.response);
         if (method === 'GET') {
-          window.render(window.notices);
+          window.pin.render(window.data.notices);
           window.filters.activate();
         }
       } else {

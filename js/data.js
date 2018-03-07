@@ -1,14 +1,15 @@
 'use strict';
 
 (function () {
-  window.notices = [];
+  var notices = [];
 
   // загрузка данных
   var onLoad = function (data) {
-    window.notices = data;
+    window.data.notices = data;
   };
 
   window.data = {
-    onLoad: onLoad
+    onLoad: onLoad,
+    notices: notices
   };
 })();
