@@ -24,20 +24,19 @@
     el.disabled = true;
   });
 
-  window.filters = {
-    activate: function () {
-      filterFeatures.disabled = false;
-      filterElements.forEach(function (el) {
-        el.disabled = false;
-      });
-    },
-    deactivate: function () {
-      filterFeatures.disabled = true;
-      filterElements.forEach(function (el) {
-        el.disabled = true;
-      });
-      window.filtersForm.reset();
-    }
+  var activate = function () {
+    filterFeatures.disabled = false;
+    filterElements.forEach(function (el) {
+      el.disabled = false;
+    });
+  };
+
+  var deactivate = function () {
+    filterFeatures.disabled = true;
+    filterElements.forEach(function (el) {
+      el.disabled = true;
+    });
+    window.filtersForm.reset();
   };
 
   var updateFilterValues = function (evt) {
@@ -95,7 +94,12 @@
   window.filtersForm.addEventListener('change', function (evt) {
     window.deleteNotice();
     updateFilterValues(evt);
-    window.debounce(updateNotices);
+    window.utils.debounce(updateNotices);
   });
+
+  window.filters = {
+    activate: activate,
+    deactivate: deactivate
+  };
 })();
 

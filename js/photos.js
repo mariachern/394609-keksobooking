@@ -1,12 +1,13 @@
 'use strict';
 
 (function () {
-  var photoApartmentFileChooser = document.querySelector('.form__photo-container input[type=file]');
-  var uploadingPhotos = document.querySelector('.form__photo-container .upload');
   var photoContainer = document.querySelector('.form__photo-container');
+  var photoApartmentFileChooser = photoContainer.querySelector('input[type=file]');
+  var uploadingPhotos = document.querySelector('.form__photo-container .upload');
 
   var draggedItem;
   var parentDraggedItem;
+  var formApartmentPhotos;
 
   photoApartmentFileChooser.addEventListener('change', function (evt) {
     var files = evt.target.files;
@@ -24,6 +25,7 @@
           div.draggable = 'true';
           div.innerHTML = '<img src="' + e.target.result + '">';
           uploadingPhotos.appendChild(div);
+          formApartmentPhotos = document.querySelectorAll('.form__photo');
         });
         reader.readAsDataURL(files[i]);
       }
@@ -54,4 +56,16 @@
       }
     }
   });
+
+  var remove = function () {
+    if (formApartmentPhotos) {
+      formApartmentPhotos.forEach(function (el) {
+        uploadingPhotos.removeChild(el);
+      });
+    }
+  };
+
+  window.photos = {
+    remove: remove
+  };
 })();

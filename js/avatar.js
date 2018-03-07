@@ -7,10 +7,6 @@
   var avatarFileChooser = document.querySelector('.notice__photo input[type=file]');
   var avatarPreview = document.querySelector('.notice__preview img');
 
-  window.clearAvatarInput = function () {
-    avatarPreview.src = DEFAULT_IMG;
-  };
-
   var addFile = function (image, preview) {
     var file = image.files[0];
     var fileName = file.name.toLowerCase();
@@ -32,4 +28,12 @@
   avatarFileChooser.addEventListener('change', function () {
     addFile(avatarFileChooser, avatarPreview);
   });
+
+  var clearAvatarInput = function () {
+    avatarPreview.src = DEFAULT_IMG;
+  };
+
+  window.avatar = {
+    clear: clearAvatarInput
+  };
 })();

@@ -32,14 +32,19 @@
     window.xhr.open(method, url);
   };
 
-  window.upload = function (data, onLoad, onError) {
+  var upload = function (data, onLoad, onError) {
     getStatus('https://js.dump.academy/keksobooking', 'POST', onLoad, onError);
 
     window.xhr.send(data);
   };
 
-  window.load = function (onLoad, onError) {
+  var load = function (onLoad, onError) {
     getStatus('https://js.dump.academy/keksobooking/data', 'GET', onLoad, onError);
     window.xhr.send();
+  };
+
+  window.backend = {
+    upload: upload,
+    load: load
   };
 })();

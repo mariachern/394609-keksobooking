@@ -47,23 +47,20 @@
     }
   };
 
-  window.map = {
-    activate: function () {
-      map.classList.remove('map--faded');
+  var activate = function () {
+    map.classList.remove('map--faded');
+    mainMapPin.removeEventListener('mouseup', onMainPinClick);
+    mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
+  };
 
-      mainMapPin.removeEventListener('mouseup', onMainPinClick);
-      mainMapPin.removeEventListener('keydown', onMainPinEnterPress);
-    },
-    deactivate: function () {
-      map.classList.add('map--faded');
-      var renderingPins = mapPins.querySelector('.rendering-pins');
-      mapPins.removeChild(renderingPins);
-      window.deleteNotice();
-      window.address.reset();
-
-      mainMapPin.addEventListener('mouseup', onMainPinClick);
-      mainMapPin.addEventListener('keydown', onMainPinEnterPress);
-    }
+  var deactivate = function () {
+    map.classList.add('map--faded');
+    var renderingPins = mapPins.querySelector('.rendering-pins');
+    mapPins.removeChild(renderingPins);
+    window.deleteNotice();
+    window.address.reset();
+    mainMapPin.addEventListener('mouseup', onMainPinClick);
+    mainMapPin.addEventListener('keydown', onMainPinEnterPress);
   };
 
   // нажатие - перетаскивание - отпускание
@@ -129,14 +126,14 @@
     window.keyboard.isEnterEvent(evt, window.map.activate);
     window.form.activate();
 
-    window.load(window.onLoad, window.onError); // загрузка данных
+    window.backend.load(window.data.onLoad, window.utils.showError); // загрузка данных
   };
 
   var onMainPinClick = function () {
     window.map.activate();
     window.form.activate();
 
-    window.load(window.onLoad, window.onError); // загрузка данных
+    window.backend.load(window.data.onLoad, window.utils.showError); // загрузка данных
   };
 
   mainMapPin.addEventListener('mouseup', onMainPinClick);
@@ -175,4 +172,9 @@
   };
 
   mapPins.addEventListener('click', onMapPinClick);
+
+  window.map = {
+    activate: activate,
+    deactivate: deactivate
+  };
 })();

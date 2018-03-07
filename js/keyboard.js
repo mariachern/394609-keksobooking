@@ -6,16 +6,20 @@
     ESC: 27
   };
 
-  window.keyboard = {
-    isEnterEvent: function (evt, action) {
-      if (evt.keyCode === Keycode.ENTER) {
-        action();
-      }
-    },
-    isEscEvent: function (evt, action) {
-      if (evt.keyCode === Keycode.ESC) {
-        action();
-      }
+  var isEnterEvent = function (evt, action) {
+    if (evt.keyCode === Keycode.ENTER) {
+      action();
     }
+  };
+
+  var isEscEvent = function (evt, action) {
+    if (evt.keyCode === Keycode.ESC) {
+      action();
+    }
+  };
+
+  window.keyboard = {
+    isEnterEvent: isEnterEvent,
+    isEscEvent: isEscEvent
   };
 })();

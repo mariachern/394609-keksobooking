@@ -32,22 +32,22 @@
     el.disabled = true;
   });
 
-  window.form = {
-    activate: function () {
-      window.noticeForm.classList.remove('notice__form--disabled');
-      window.noticeFormFieldset.forEach(function (el) {
-        el.disabled = false;
-        window.address.set();
-      });
-    },
-    deactivate: function () {
-      window.noticeForm.classList.add('notice__form--disabled');
-      window.noticeFormFieldset.forEach(function (el) {
-        el.disabled = true;
-      });
-      window.clearAvatarInput();
-      window.noticeForm.reset();
-    }
+  var activate = function () {
+    window.noticeForm.classList.remove('notice__form--disabled');
+    window.noticeFormFieldset.forEach(function (el) {
+      el.disabled = false;
+      window.address.set();
+    });
+  };
+
+  var deactivate = function () {
+    window.noticeForm.classList.add('notice__form--disabled');
+    window.noticeFormFieldset.forEach(function (el) {
+      el.disabled = true;
+    });
+    window.avatar.clear();
+    window.photos.remove();
+    window.noticeForm.reset();
   };
 
   // заполнение полей времени
@@ -102,6 +102,11 @@
   // отправка формы
   window.noticeForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.upload(new FormData(window.noticeForm), onLoad, window.onError);
+    window.backend.upload(new FormData(window.noticeForm), onLoad, window.utils.showError);
   });
+
+  window.form = {
+    activate: activate,
+    deactivate: deactivate
+  };
 })();
